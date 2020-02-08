@@ -7,10 +7,12 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class   TankFrame extends Frame {
-    int x=10,y=10;
+    static final int  GAME_WIDTH=800,GAME_HEIGHT=600;
+    Tank myTank=new Tank(350,400,Dir.UP);
+    Bullet bl=new Bullet(350,400,Dir.UP);
     TankFrame(){
 
-        setSize(800,600);
+        setSize(GAME_WIDTH,GAME_HEIGHT);
         setTitle("tank war");
         setVisible(true);
 
@@ -22,29 +24,114 @@ public class   TankFrame extends Frame {
             }
         });
     }
+
+    Image offScreenImage=null;
+    @Override
+    public void update(Graphics g){
+        if(offScreenImage==null){
+            offScreenImage=this.createImage(GAME_WIDTH,GAME_HEIGHT);
+        }
+        Graphics gOffscreen=offScreenImage.getGraphics();
+        Color c=gOffscreen.getColor();
+            gOffscreen.setColor(Color.WHITE);
+            gOffscreen.fillRect(0,0,GAME_WIDTH,GAME_HEIGHT);
+            gOffscreen.setColor(c);
+            paint(gOffscreen);
+            g.drawImage(offScreenImage,0,0,null);
+    }
+
     @Override
     public void paint(Graphics g){
-
-        System.out.println("paint");
-        g.fillRect(x,y,100,100);
-        x+=10;
-
-
+        myTank.paint(g);
+        bl.paint(g);
     }
 
     class  MyKeyListener extends KeyAdapter {
+        /**
+         * 四个boolean用于表示按键按下
+         */
+        boolean BL=false;
+        boolean BR=false;
+        boolean BU=false;
+        boolean BD=false;
 
         @Override
         public void keyPressed(KeyEvent e) {
-            System.out.println("key pressed");
-            repaint();
+            int key=e.getKeyCode();
+            switch (key){
+                case KeyEvent.VK_UP:
+                    BU=true;
+                    break;
+                case KeyEvent.VK_DOWN:
+                    BD=true;
+                    break;
+                case KeyEvent.VK_LEFT:
+                    BL=true;
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    BR=true;
+                    break;
+                default:
+                    ;
+            }
+            setMainTankDirection(myTank);
         }
 
         @Override
         public void keyReleased(KeyEvent e) {
-            System.out.println("key released");
-            repaint();
+               int key=e.getKeyCode();
+               switch(key){
+                   case KeyEvent.VK_UP:
+                       BU=false;
+                       break;
+                   case KeyEvent.VK_DOWN:
+                       BD=false;
+                       break;
+                   case KeyEvent.VK_LEFT:
+                       BL=false;
+                       break;
+                   case KeyEvent.VK_RIGHT:
+                       BR=false;
+                       break;
+                   default:;
+               }
+               setMainTankDirection(myTank);
         }
+
+        private void setMainTankDirection(Tank myTank){
+            if(!BR&&!BU&&!BL&&!BD){
+                myTank.setMoving(false);
+            }
+            else {
+                myTank.setMoving(true);
+            }
+
+            if(BU){
+                myTank.setDir(Dir.UP);
+            }
+            if(BD){
+                myTank.setDir(Dir.DOWN);
+            }
+            if(BL){
+                myTank.setDir(Dir.LEFT);
+            }
+            if(BR){
+                myTank.setDir(Dir.RIGHT);
+            }
+            if(BU&&BL){
+                myTank.setDir(Dir.LEFTUP);
+            }
+            if(BU&&BR){
+                myTank.setDir(Dir.RIGHTUP);
+            }
+            if(BD&&BL){
+                myTank.setDir(Dir.LEFTDOWN);
+            }
+            if(BD&&BR){
+                myTank.setDir(Dir.RIGHTDOWN);
+            }
+        }
+
     }
 
 }
