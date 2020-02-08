@@ -8,8 +8,8 @@ import java.awt.event.WindowEvent;
 
 public class   TankFrame extends Frame {
     static final int  GAME_WIDTH=800,GAME_HEIGHT=600;
-    Tank myTank=new Tank(350,400,Dir.UP);
-    Bullet bl=new Bullet(350,400,Dir.UP);
+    Tank myTank=new Tank(350,400,Dir.UP,this);
+    Bullet bl=new Bullet(350,350,Dir.UP);
     TankFrame(){
 
         setSize(GAME_WIDTH,GAME_HEIGHT);
@@ -70,6 +70,9 @@ public class   TankFrame extends Frame {
                     break;
                 case KeyEvent.VK_RIGHT:
                     BR=true;
+                    break;
+                case KeyEvent.VK_SPACE:
+                    myTank.fire();
                     break;
                 default:
                     ;
