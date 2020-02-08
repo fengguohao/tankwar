@@ -13,7 +13,11 @@
  实现了利用Thread.sleep阻塞线程实现刷新重绘（repaint）
 
 //2.8
+version0.2
 实现了class Tank 与 Bullet
 封装思想，paint方法传递
 实现了枚举类Dir
 实现了双缓冲解决闪烁
+
+version0.3
+实现了获取引用Tankframe 传递bullet到Tankframe
