@@ -1,7 +1,9 @@
 package com.fguohao;
 
+import javax.xml.bind.annotation.XmlList;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Tank {
     private int x=350,y=400;
@@ -13,6 +15,8 @@ public class Tank {
     private boolean live=true;
     public static int Width=ResourceMgr.tankD.getWidth();
     public static int Height=ResourceMgr.tankD.getHeight();
+    private Rectangle rect=new Rectangle();
+    private Random rand=new Random();
 
     public Tank(int x, int y, Dir dir,Group group, TankFrame tf) {
         this.x = x;
@@ -20,6 +24,11 @@ public class Tank {
         this.dir = dir;
         this.group=group;
         this.tf=tf;
+
+        rect.x= x;
+        rect.y=y;
+        rect.width=Tank.Width;
+        rect.height= Tank.Height;
     }
 
     public TankFrame getTf() {
@@ -59,7 +68,7 @@ public class Tank {
     }
 
     public Rectangle getTankRec() {
-        return new Rectangle(this.getX(),this.getY(),Tank.Width,Tank.Height);
+        return rect;
     }
 
     public void paint(Graphics g){
@@ -95,6 +104,13 @@ public class Tank {
     }
 
     private void move(boolean moving){
+        if(this.getGroup()==Group.BAD){
+           if(rand.nextInt(100)>95){
+               randomDir();
+           }
+
+        }
+
         if(moving){
             switch(dir){
                 case UP:
@@ -128,7 +144,28 @@ public class Tank {
                 default:;
             }
         }
+        boundscheck();
+        rect.x= x;
+        rect.y=y;
+    }
 
+    private void randomDir(){
+        this.dir=Dir.values()[rand.nextInt(4)];
+    }
+
+    public void boundscheck(){
+        if(x<0) {
+            x=0;
+        }
+        if(x>TankFrame.GAME_WIDTH-Tank.Width){
+            x=TankFrame.GAME_WIDTH-Tank.Width;
+        }
+        if(y<50) {
+            y=50;
+        }
+        if(y>TankFrame.GAME_HEIGHT-Tank.Height){
+            y=TankFrame.GAME_HEIGHT-Tank.Height;
+        }
     }
 
     public void fire(){

@@ -12,6 +12,7 @@ public class Bullet {
     private boolean live=true;
     private Tank tank=null;
     private TankFrame tf;
+    private Rectangle rect=new Rectangle();
     public static int Width=ResourceMgr.bulletD.getWidth();
     public static int Height=ResourceMgr.bulletD.getHeight();
 
@@ -22,10 +23,15 @@ public class Bullet {
         this.tank=tank;
         this.group=tank.getGroup();
         this.tf=tank.getTf();
+
+        rect.x=x;
+        rect.y=y;
+        rect.width=Bullet.Width;
+        rect.height=Bullet.Height;
     }
 
     public Rectangle getBulletRec() {
-        return new Rectangle(this.getX(),this.getY(),Bullet.Width,Bullet.Height);
+        return rect;
     }
 
     public void die() {
@@ -44,9 +50,6 @@ public class Bullet {
         return group;
     }
 
-    public void setGroup(Group group) {
-        this.group = group;
-    }
 
     public void paint(Graphics g){
         if(!live){
@@ -107,6 +110,8 @@ public class Bullet {
         if(this.x<0||this.y<0||this.x>TankFrame.GAME_WIDTH||this.y>TankFrame.GAME_HEIGHT){
             this.live=false;
         }
+        rect.x=x;
+        rect.y=y;
     }
 
     public void collidewith(Tank tank){

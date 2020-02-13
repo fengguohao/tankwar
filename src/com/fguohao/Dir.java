@@ -10,6 +10,14 @@ public enum Dir {
      */
     LEFT,
     /**
+     *右方向
+     */
+    RIGHT,
+    /**
+     * 上方向
+     */
+    UP,
+    /**
      * 左下方向*
      */
     LEFTDOWN,
@@ -17,10 +25,7 @@ public enum Dir {
      *左上方向
      */
     LEFTUP,
-    /**
-    *右方向
-     */
-    RIGHT,
+
     /**
      * 右下方向
      */
@@ -28,11 +33,5 @@ public enum Dir {
     /**
      * 右上方向
      */
-    RIGHTUP,
-    /**
-     * 上方向
-     */
-    UP
-
-
+    RIGHTUP
 }
