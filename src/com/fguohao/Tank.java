@@ -4,29 +4,62 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Tank {
-    public ArrayList<Bullet> bullets = new ArrayList<Bullet>();
     private int x=350,y=400;
     private final int SPEED=5;
     private Dir dir=Dir.UP;
+    private Group group;
     private boolean moving=false;
     private TankFrame tf=null;
     private boolean live=true;
     public static int Width=ResourceMgr.tankD.getWidth();
     public static int Height=ResourceMgr.tankD.getHeight();
 
+    public Tank(int x, int y, Dir dir,Group group, TankFrame tf) {
+        this.x = x;
+        this.y = y;
+        this.dir = dir;
+        this.group=group;
+        this.tf=tf;
+    }
+
+    public TankFrame getTf() {
+        return tf;
+    }
+
+    public void die() {
+        this.live=false;
+    }
+
     public boolean isLive() {
         return live;
     }
 
-    public void setLive(boolean live) {
-        this.live = live;
+    public int getX() {
+        return x;
     }
 
-    public Tank(int x, int y, Dir dir, TankFrame tf) {
-        this.x = x;
-        this.y = y;
+    public int getY() {
+        return y;
+    }
+
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
+    }
+
+    public void setDir(Dir dir) {
         this.dir = dir;
-        this.tf=tf;
+    }
+
+    public void setMoving(boolean moving) {
+        this.moving = moving;
+    }
+
+    public Rectangle getTankRec() {
+        return new Rectangle(this.getX(),this.getY(),Tank.Width,Tank.Height);
     }
 
     public void paint(Graphics g){
@@ -59,30 +92,6 @@ public class Tank {
             default:
         }
 
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public void setDir(Dir dir) {
-        this.dir = dir;
-    }
-
-    public void setMoving(boolean moving) {
-        this.moving = moving;
     }
 
     private void move(boolean moving){
@@ -123,6 +132,6 @@ public class Tank {
     }
 
     public void fire(){
-        bullets.add(new Bullet(x+20,y+20,dir,this)) ;
+        tf.bullets.add(new Bullet(x+20,y+20,dir,this)) ;
     }
 }

@@ -6,13 +6,16 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class  TankFrame extends Frame {
+    Random rand=new Random();
     static final int  GAME_WIDTH=800,GAME_HEIGHT=600;
-    Tank myTank=new Tank(350,400,Dir.UP,this);
+    Tank myTank=new Tank(350,400,Dir.UP,Group.GOOD,this);
     Bullet bl=new Bullet(350,350,Dir.UP,myTank);
+    public ArrayList<Bullet> bullets = new ArrayList<Bullet>();
     ArrayList<Tank> tanks=new ArrayList<>();
-
+    ArrayList<Explode> explodes=new ArrayList<>();
     TankFrame(){
 
         setSize(GAME_WIDTH,GAME_HEIGHT);
@@ -45,21 +48,38 @@ public class  TankFrame extends Frame {
 
     @Override
     public void paint(Graphics g){
-        myTank.paint(g);
-        for(int i=0;i<myTank.bullets.size();i++){
-            myTank.bullets.get(i).paint(g);
+        //画主战坦克
+        if(myTank.isLive()){
+            myTank.paint(g);
         }
+
+        //画主战坦克子弹
+        for(int i=0;i<bullets.size();i++){
+            bullets.get(i).paint(g);
+        }
+        //画敌人坦克
         for(int i=0;i<tanks.size();i++){
             if(!tanks.get(i).isLive()){
                 tanks.remove(i);
                 continue;
             }
+            if(rand.nextInt(10)>8){
+                tanks.get(i).fire();
+            }
             tanks.get(i).paint(g);
         }
-        for(int i=0;i<myTank.bullets.size();i++){
-            for(int j=0;j<tanks.size();j++){
-                myTank.bullets.get(i).collidewith(tanks.get(j));
+
+        //检测是否被摧毁
+        for(int k=0;k<bullets.size();k++){
+            bullets.get(k).collidewith(myTank);
+            for(int i=0;i<tanks.size();i++){
+                bullets.get(k).collidewith(tanks.get(i));
             }
+        }
+
+        //爆炸
+        for(int i=0;i<explodes.size();i++){
+            explodes.get(i).paint(g);
         }
     }
 
@@ -89,7 +109,10 @@ public class  TankFrame extends Frame {
                     BR=true;
                     break;
                 case KeyEvent.VK_SPACE:
-                    myTank.fire();
+                    if(myTank.isLive()){
+                        myTank.fire();
+                    }
+
                     break;
                 default:
                     ;
