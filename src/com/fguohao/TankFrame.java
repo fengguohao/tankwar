@@ -5,11 +5,14 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 
-public class   TankFrame extends Frame {
+public class  TankFrame extends Frame {
     static final int  GAME_WIDTH=800,GAME_HEIGHT=600;
     Tank myTank=new Tank(350,400,Dir.UP,this);
-    Bullet bl=new Bullet(350,350,Dir.UP);
+    Bullet bl=new Bullet(350,350,Dir.UP,myTank);
+    ArrayList<Tank> tanks=new ArrayList<>();
+
     TankFrame(){
 
         setSize(GAME_WIDTH,GAME_HEIGHT);
@@ -33,7 +36,7 @@ public class   TankFrame extends Frame {
         }
         Graphics gOffscreen=offScreenImage.getGraphics();
         Color c=gOffscreen.getColor();
-            gOffscreen.setColor(Color.WHITE);
+            gOffscreen.setColor(Color.BLACK);
             gOffscreen.fillRect(0,0,GAME_WIDTH,GAME_HEIGHT);
             gOffscreen.setColor(c);
             paint(gOffscreen);
@@ -43,7 +46,21 @@ public class   TankFrame extends Frame {
     @Override
     public void paint(Graphics g){
         myTank.paint(g);
-        bl.paint(g);
+        for(int i=0;i<myTank.bullets.size();i++){
+            myTank.bullets.get(i).paint(g);
+        }
+        for(int i=0;i<tanks.size();i++){
+            if(!tanks.get(i).isLive()){
+                tanks.remove(i);
+                continue;
+            }
+            tanks.get(i).paint(g);
+        }
+        for(int i=0;i<myTank.bullets.size();i++){
+            for(int j=0;j<tanks.size();j++){
+                myTank.bullets.get(i).collidewith(tanks.get(j));
+            }
+        }
     }
 
     class  MyKeyListener extends KeyAdapter {
