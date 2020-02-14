@@ -10,7 +10,7 @@ import java.util.Random;
 
 public class  TankFrame extends Frame {
     Random rand=new Random();
-    static final int  GAME_WIDTH=800,GAME_HEIGHT=600;
+    static final int  GAME_WIDTH=PropertyMgr.getInt("GAME_WIDTH"),GAME_HEIGHT=PropertyMgr.getInt("GAME_HEIGHT");
     Tank myTank=new Tank(350,400,Dir.UP,Group.GOOD,this);
     Bullet bl=new Bullet(350,350,Dir.UP,myTank);
     public ArrayList<Bullet> bullets = new ArrayList<Bullet>();
