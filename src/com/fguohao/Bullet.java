@@ -4,7 +4,7 @@ import java.awt.*;
 import java.io.Writer;
 
 public class Bullet {
-    private final int SPEED=10;
+    private final int SPEED=PropertyMgr.getInt("bulletSpeed");
     private int x,y;
     private final int WIDTH=10,HEIGHT=10;
     private Dir dir=Dir.UP;

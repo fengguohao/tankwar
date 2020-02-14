@@ -7,16 +7,17 @@ import java.util.Random;
 
 public class Tank {
     private int x=350,y=400;
-    private final int SPEED=5;
+    private final int SPEED=PropertyMgr.getInt("tankSpeed");
     private Dir dir=Dir.UP;
     private Group group;
     private boolean moving=false;
     private TankFrame tf=null;
     private boolean live=true;
-    public static int Width=ResourceMgr.tankD.getWidth();
-    public static int Height=ResourceMgr.tankD.getHeight();
+    public static int Width=ResourceMgr.goodTankD[0].getWidth();
+    public static int Height=ResourceMgr.goodTankD[0].getHeight();
     private Rectangle rect=new Rectangle();
     private Random rand=new Random();
+    private int state=0;
 
     public Tank(int x, int y, Dir dir,Group group, TankFrame tf) {
         this.x = x;
@@ -25,10 +26,10 @@ public class Tank {
         this.group=group;
         this.tf=tf;
 
-        rect.x= x;
-        rect.y=y;
-        rect.width=Tank.Width;
-        rect.height= Tank.Height;
+        rect.x= x+2;
+        rect.y=y+2;
+        rect.width=Tank.Width-4;
+        rect.height= Tank.Height-4;
     }
 
     public TankFrame getTf() {
@@ -75,30 +76,33 @@ public class Tank {
         this.move(moving);
         switch (dir){
             case UP:
-                g.drawImage(ResourceMgr.tankU,x,y,null);
+                g.drawImage(this.group==Group.GOOD?ResourceMgr.goodTankU[state++>8?0:1]:ResourceMgr.badTankU[state++>8?0:1],x,y,null);
                 break;
             case DOWN:
-                g.drawImage(ResourceMgr.tankD,x,y,null);
+                g.drawImage(this.group==Group.GOOD?ResourceMgr.goodTankD[state++>8?0:1]:ResourceMgr.badTankD[state++>8?0:1],x,y,null);
                 break;
             case LEFT:
-                g.drawImage(ResourceMgr.tankL,x,y,null);
+                g.drawImage(this.group==Group.GOOD?ResourceMgr.goodTankL[state++>8?0:1]:ResourceMgr.badTankL[state++>8?0:1],x,y,null);
                 break;
             case RIGHT:
-                g.drawImage(ResourceMgr.tankR,x,y,null);
+                g.drawImage(this.group==Group.GOOD?ResourceMgr.goodTankR[state++>8?0:1]:ResourceMgr.badTankR[state++>8?0:1],x,y,null);
                 break;
             case LEFTDOWN:
-                g.drawImage(ResourceMgr.tankLD,x,y,null);
+                g.drawImage(ResourceMgr.goodTankLD[state++>8?0:1],x,y,null);
                 break;
             case LEFTUP:
-                g.drawImage(ResourceMgr.tankLU,x,y,null);
+                g.drawImage(ResourceMgr.goodTankLU[state++>8?0:1],x,y,null);
                 break;
             case RIGHTDOWN:
-                g.drawImage(ResourceMgr.tankRD,x,y,null);
+                g.drawImage(ResourceMgr.goodTankRD[state++>8?0:1],x,y,null);
                 break;
             case RIGHTUP:
-                g.drawImage(ResourceMgr.tankRU,x,y,null);
+                g.drawImage(ResourceMgr.goodTankRU[state++>8?0:1],x,y,null);
                 break;
             default:
+        }
+        if(state==16){
+            state=0;
         }
 
     }
@@ -145,8 +149,8 @@ public class Tank {
             }
         }
         boundscheck();
-        rect.x= x;
-        rect.y=y;
+        rect.x= x+2;
+        rect.y=y+2;
     }
 
     private void randomDir(){
@@ -169,6 +173,6 @@ public class Tank {
     }
 
     public void fire(){
-        tf.bullets.add(new Bullet(x+20,y+20,dir,this)) ;
+        tf.bullets.add(new Bullet(x+Tank.Width/2-Bullet.Width/2,y+ Tank.Height/2-Bullet.Height/2,dir,this)) ;
     }
 }
